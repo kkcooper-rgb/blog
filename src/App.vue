@@ -1,32 +1,25 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <common-nav v-if="!$route.name.includes('home')"/>
     <router-view/>
   </div>
 </template>
-
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+<script>
+  import CommonNav from "./components/common/nav/CommonNav";
+  export default {
+    name:"app",
+    components:{
+      CommonNav
+    },
   }
-}
+</script>
+<style lang="less">
+  //初始样式引入及字体样式
+  @import "assets/css/reset.css";
+  @import "assets/css/font.css";
+  #app{
+    width: 100%;
+    height: 100vh;
+    background: url("./assets/img/bg.jpg") center top/cover fixed;
+  }
 </style>
