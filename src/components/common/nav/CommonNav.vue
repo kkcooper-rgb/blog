@@ -5,6 +5,8 @@
             <div class="n-m-logo">Mr.Han</div>
             <!--头部登录-->
             <div class="n-m-login">
+                <el-button type="primary">登陆</el-button>
+                <el-button type="success">注册</el-button>
             </div>
             <!--头部导航-->
             <div class="n-m-nav">
@@ -13,7 +15,7 @@
                         <router-link to="/">首页</router-link>
                     </li>
                     <li>
-                        <router-link to="/blog">博客</router-link>
+                        <router-link to="/blog/0">博客</router-link>
                     </li>
                     <li>
                         <router-link to="/message">留言</router-link>
@@ -54,6 +56,7 @@
 </script>
 
 <style scoped lang="less">
+    @import "../../../assets/css/varible.less";
     #nav {
         overflow: hidden;
         position: fixed;
@@ -130,12 +133,12 @@
                                 content: "";
                                 width: 0;
                                 height: 2px;
-                                background-color: #6bc30d;
+                                background-color: @themeColor;
                                 transition: width .5s;
                             }
 
                             &:hover {
-                                color: #6bc30d;
+                                color: @themeColor;
 
                                 &::after {
                                     width: 100%;
@@ -151,7 +154,7 @@
                     &.list5 li:nth-child(5),
                     &.list6 li:nth-child(6) {
                         a {
-                            color: #6bc30d;
+                            color: @themeColor;
 
                             &::after {
                                 width: 100%;

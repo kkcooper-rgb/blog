@@ -19,7 +19,6 @@
   @import "assets/css/font.css";
   #app{
     width: 100%;
-    height: 100vh;
     background: url("./assets/img/bg.jpg") center top/cover fixed;
   }
 </style>
