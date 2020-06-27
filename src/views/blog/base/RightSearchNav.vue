@@ -1,14 +1,19 @@
 <template>
     <div class="RightSearchNav">
         <div class="search">
+            <!--搜索框-->
             <div class="search-main">
                 <input type="text"  placeholder="请输入搜索内容">
+                <i class="el-icon-search"></i>
             </div>
+            <!--侧边导航条-->
             <div class="search-article">
-                <ul>
-                    <li v-for="item in getArticleTags"><a href="">{{item}}</a></li>
+                <ul @mouseleave="handleMouseleave">
+                    <li @mouseenter="handleMouseenter(index)" v-for="(item,index) in getArticleTags">
+                        <router-link :to="'/blog/'+index">{{item}}</router-link>
+                    </li>
                 </ul>
-                <div class="cover"></div>
+                <div class="cover" :style="{top:coverIndex*40+'px'}"></div>
             </div>
         </div>
     </div>
@@ -19,9 +24,29 @@
         name: "RightSearchNav",
         data(){
             return{
-                getArticleTags:["全部文章","HTML&CSS","JavaScript","Node","Vue&React","Other"]
+                //cover的初始值的参数
+                coverIndex:this.$route.params.id*1
             }
-        }
+        },
+       props:{
+           getArticleTags:{
+               type:Array,
+               default:function () {
+                   return []
+               }
+           }
+       },
+        methods:{
+
+            //鼠标移入时cover跟随鼠标变化
+            handleMouseenter(index){
+                this.coverIndex = index
+            },
+            //移出时cover返回到初始
+            handleMouseleave(){
+                this.coverIndex = this.$route.params.id*1;
+            },
+        },
     }
 </script>
 
