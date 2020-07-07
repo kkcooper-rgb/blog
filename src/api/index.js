@@ -17,3 +17,14 @@ export function getArticleHot(skip =0,limit=8) {
 export function getArticleComment(skip =0,limit=1) {
     return axios.get("/article/getHot"+`?skip=${skip}&limit=${limit}`)
 }
+//获取文章列表
+export function getArticleShow(skip=0,limit=5) {
+    let data = {skip,limit};
+    skip += limit;
+    return axios.post("/article/getShow",data)
+}
+//获取验证码图片
+export function getRegisterVCode() {
+    return axios.post("/register/vcode");
+}
+

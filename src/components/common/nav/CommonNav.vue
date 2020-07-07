@@ -1,47 +1,53 @@
 <template>
-    <div id="nav">
-        <div class="nav-main">
-            <!--logo-->
-            <div class="n-m-logo">Mr.Han</div>
-            <!--头部登录-->
-            <div class="n-m-login">
-                <el-button type="primary">登陆</el-button>
-                <el-button type="success">注册</el-button>
-            </div>
-            <!--头部导航-->
-            <div class="n-m-nav">
-                <ul :class="'list'+whichActive">
-                    <li>
-                        <router-link to="/">首页</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/blog/0">博客</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/message">留言</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/diary">日记</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/links">友链</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/about">关于</router-link>
-                    </li>
-                </ul>
+    <div>
+        <div id="nav">
+            <div class="nav-main">
+                <!--logo-->
+                <div class="n-m-logo">Mr.Han</div>
+                <!--头部登录-->
+                <div class="n-m-login">
+                    <el-button type="primary">登陆</el-button>
+                    <el-button type="success" @click="">注册</el-button>
+                </div>
+                <!--头部导航-->
+                <div class="n-m-nav">
+                    <ul :class="'list'+whichActive">
+                        <li>
+                            <router-link to="/">首页</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/blog/0">博客</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/message">留言</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/diary">日记</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/links">友链</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/about">关于</router-link>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
+        <register :dialogVisible="ifShowRegister=true" @handleClose="closeRegister"/>
     </div>
 </template>
 
 <script>
+    import Register from "../../content/register/Register";
+    import Login from "../../content/login/Login";
     export default {
         name: "CommonNav",
         data(){
             return{
                 //路由列表
-                routerList:["home","blog","message","diary","links","about"]
+                routerList:["home","blog","message","diary","links","about"],
+                ifShowRegister:false
             }
 
         },
@@ -51,6 +57,15 @@
                 let index = this.routerList.indexOf(this.$route.name);
                 return index+1;
             }
+        },
+        methods:{
+            closeRegister(){
+                this.ifShowRegister = true;
+            }
+        },
+        components:{
+            Register,
+            Login
         }
     }
 </script>
