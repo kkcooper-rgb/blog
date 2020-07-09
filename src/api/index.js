@@ -18,13 +18,32 @@ export function getArticleComment(skip =0,limit=1) {
     return axios.get("/article/getHot"+`?skip=${skip}&limit=${limit}`)
 }
 //获取文章列表
-export function getArticleShow(skip=0,limit=5) {
-    let data = {skip,limit};
-    skip += limit;
-    return axios.post("/article/getShow",data)
+export default {
+    getArticleShow:(function(){
+        let skip = 0;
+        let limit = 5;
+        return function (index=0,ifFresh=false) {
+            if (ifFresh){
+                skip=0;
+                limit =5;
+            }
+            let tag = ["","HTML&Css","JavaScript","Node","Vue&React","Other"][index];
+            let data = {skip,limit,tag};
+            skip+=limit;
+            return axios.post("/article/getShow",data)
+        }
+    })()
 }
+
 //获取验证码图片
 export function getRegisterVCode() {
     return axios.post("/register/vcode");
 }
-
+//获取验证码图片失去焦点
+export function getRegisterCheckVCode(svgCode) {
+    return axios.post('/register/checkVcode',{svgCode});
+}
+//注册接口
+export function postRegister(options) {
+    return axios.post('/register',{options});
+}

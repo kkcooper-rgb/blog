@@ -6,8 +6,8 @@
                 <div class="n-m-logo">Mr.Han</div>
                 <!--头部登录-->
                 <div class="n-m-login">
-                    <el-button type="primary">登陆</el-button>
-                    <el-button type="success" @click="">注册</el-button>
+                    <el-button type="primary" @click="ifLogin=true">登陆</el-button>
+                    <el-button type="success" @click="ifShowRegister=true">注册</el-button>
                 </div>
                 <!--头部导航-->
                 <div class="n-m-nav">
@@ -34,7 +34,8 @@
                 </div>
             </div>
         </div>
-        <register :dialogVisible="ifShowRegister=true" @handleClose="closeRegister"/>
+        <register :dialogVisible="ifShowRegister" @handleClose="closeRegister"/>
+        <login :dialogVisible="ifLogin" @handleClose="closeLogin"/>
     </div>
 </template>
 
@@ -47,7 +48,8 @@
             return{
                 //路由列表
                 routerList:["home","blog","message","diary","links","about"],
-                ifShowRegister:false
+                ifShowRegister:false,
+                ifLogin:false
             }
 
         },
@@ -60,7 +62,10 @@
         },
         methods:{
             closeRegister(){
-                this.ifShowRegister = true;
+                this.ifShowRegister = false;
+            },
+            closeLogin(){
+                this.ifLogin = false;
             }
         },
         components:{

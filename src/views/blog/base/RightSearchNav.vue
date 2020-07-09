@@ -1,6 +1,6 @@
 <template>
     <div class="RightSearchNav">
-        <div class="search">
+        <div :class="['search',{fixed:ifSearchFixed}]">
             <!--搜索框-->
             <div class="search-main">
                 <input type="text"  placeholder="请输入搜索内容">
@@ -25,7 +25,9 @@
         data(){
             return{
                 //cover的初始值的参数
-                coverIndex:this.$route.params.id*1
+                coverIndex:this.$route.params.id*1,
+                //控制search的class名字
+                ifSearchFixed:false
             }
         },
        props:{
@@ -46,7 +48,18 @@
             handleMouseleave(){
                 this.coverIndex = this.$route.params.id*1;
             },
+            handelSearchScroll(){
+                this.ifSearchFixed = document.documentElement.scrollTop>900;
+            }
+
         },
+        mounted() {
+            window.addEventListener("scroll",this.handelSearchScroll)
+        },
+        destroyed() {
+            //离开当前路由之后，就不需要这个事件了
+            window.removeEventListener("scroll", this.handelSearchScroll )
+        }
     }
 </script>
 
@@ -55,6 +68,19 @@
         width: 100%;
         background-color: #fff;
         padding-bottom: 20px;
+        &.fixed{
+            position: fixed;
+            z-index: 3;
+            width: 300px;
+            animation: searchMove .5s 1 ease-in-out;
+            animation-fill-mode: forwards;
+        }
+        @keyframes searchMove{
+            0%{top : -500px}
+            40%{top: 81px}
+            65%{top: 70px}
+            100%{top: 81px}
+        }
         .search-main{
             position: relative;
             box-sizing: border-box;

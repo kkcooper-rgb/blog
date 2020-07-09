@@ -6,6 +6,8 @@
             <el-main>
                 <!--文章内容-->
                 <article-show :articleList="articleList"/>
+                <!--文章加载提示-->
+                <loader-more :ifLoading="ifLoading" :ifNoMore="ifNoMore"/>
             </el-main>
             <!--侧边栏-->
             <el-aside>
@@ -23,11 +25,14 @@
 </template>
 
 <script>
-    import {getArticleInfo,getArticleHot,getArticleComment,getArticleShow} from "../../../api/index"
+    import request from "../../../api";
+    const getArticleShow = request.getArticleShow;
+    import {getArticleInfo,getArticleHot,getArticleComment} from "../../../api/index"
     import RightSearchNav from "./RightSearchNav";
     import HotCommentInfo from "./HotCommentInfo";
     import Visitor from "./Visitor";
     import ArticleShow from "./ArticleShow";
+    import LoaderMore from "./LoaderMore";
     export default {
         name: "Container",
         data(){
@@ -42,14 +47,32 @@
                 comment:"推荐置顶",
                 /*这是最近访客的数据*/
                 visitor:[],
-                articleList:[]
+                articleList:[],
+                //是否加载
+                ifLoading:false,
+                //no-more的显示与否
+                ifNoMore:false,
             }
         },
         mounted() {
             this.changeArticleInfo();
             this.changeArticleHot();
             this.changeArticleComment();
-            this.changeArticleShow()
+            this.changeArticleShow();
+            //监听滚动事件
+            window.addEventListener("scroll",this.handleScroll)
+        },
+        computed:{
+          id(){
+              return this.$route.params.id
+          }
+        },
+        watch:{
+            id(){
+                //当id发生变化时
+                this.changeArticleShow();
+                document.documentElement.scrollTop = 0;
+            }
         },
         methods:{
             //获取tags数据
@@ -69,16 +92,41 @@
             },
             //获取推荐置顶
             async changeArticleShow(){
-                const result = await getArticleShow();
+                const result = await getArticleShow(this.id,false);
                 this.articleList = result.data.data
             },
-
+            handleScroll(){
+                if (this.ifNoMore||this.ifLoading)return;
+                //滚动高度
+                let a = document.documentElement.scrollTop;
+                //可视区的高度
+                let b = document.documentElement.clientHeight;
+                //文档高度
+                let c = document.documentElement.offsetHeight;
+                if (a+b>c-200){
+                    this.ifLoading = true;
+                    getArticleShow(this.id,false).then(res=>{
+                        this.ifLoading = false;
+                        let data = res.data.data;
+                        console.log(data.length);
+                        if (data.length){
+                            this.articleList.push(...res.data.data);
+                        }else{
+                            this.ifNoMore = true;
+                        }
+                    })
+                }
+            }
         },
         components:{
             RightSearchNav,
             HotCommentInfo,
             Visitor,
-            ArticleShow
+            ArticleShow,
+            LoaderMore
+        },
+        destroyed() {
+            window.removeEventListener("scroll",this.handleScroll)
         }
     }
 </script>
