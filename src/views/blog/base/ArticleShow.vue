@@ -4,7 +4,7 @@
         <section v-for="item in articleList">
             <h5>
                 <span>【{{item.type}}】</span>
-                <router-link :to="'/Article/'+item._id">{{item.title}}</router-link>
+                <router-link :to="'/article/'+item._id">{{item.title}}</router-link>
             </h5>
             <div class="time">
                 <p class="date">{{item.date | date}}</p>
@@ -12,7 +12,7 @@
                 <p class="year">{{item.date | year}}</p>
             </div>
             <div class="content">
-                <router-link :to="'/Article/'+item._id" :style="{backgroundImage:'url('+item.surface+')'}">
+                <router-link :to="'/article/'+item._id" :style="{backgroundImage:'url('+item.surface+')'}">
                     <i></i>
                 </router-link>
                 {{item.content}}

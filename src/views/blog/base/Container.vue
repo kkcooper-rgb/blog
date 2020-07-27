@@ -18,7 +18,7 @@
                 <!--推荐置顶-->
                 <hot-comment-info :info="comment" :articleHot="articleComment"/>
                 <!--访客-->
-                <visitor/>
+                <visitor :visitor="visitor" />
             </el-aside>
         </el-container>
     </div>
@@ -27,7 +27,7 @@
 <script>
     import request from "../../../api";
     const getArticleShow = request.getArticleShow;
-    import {getArticleInfo,getArticleHot,getArticleComment} from "../../../api/index"
+    import {getArticleInfo,getArticleHot,getArticleComment,getVisitor} from "../../../api/index"
     import RightSearchNav from "./RightSearchNav";
     import HotCommentInfo from "./HotCommentInfo";
     import Visitor from "./Visitor";
@@ -59,6 +59,7 @@
             this.changeArticleHot();
             this.changeArticleComment();
             this.changeArticleShow();
+            this.changVisitor();
             //监听滚动事件
             window.addEventListener("scroll",this.handleScroll)
         },
@@ -82,7 +83,7 @@
             },
             //获取热门文章
             async changeArticleHot(){
-                const result = await getArticleHot();
+                const result = await getArticleHot(0,8);
                 this.articleHot = result.data.data
             },
             //获取推荐置顶
@@ -92,8 +93,12 @@
             },
             //获取推荐置顶
             async changeArticleShow(){
-                const result = await getArticleShow(this.id,false);
+                const result = await getArticleShow(this.id,true);
                 this.articleList = result.data.data
+            },
+            async changVisitor(){
+                const result = await getVisitor();
+                this.visitor = result.data.data
             },
             handleScroll(){
                 if (this.ifNoMore||this.ifLoading)return;
@@ -108,7 +113,6 @@
                     getArticleShow(this.id,false).then(res=>{
                         this.ifLoading = false;
                         let data = res.data.data;
-                        console.log(data.length);
                         if (data.length){
                             this.articleList.push(...res.data.data);
                         }else{

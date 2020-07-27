@@ -6,6 +6,7 @@ import Diary from "../views/diary/Diary";
 import About from "../views/about/About";
 import Links from "../views/links/Links";
 import Message from "../views/message/Message";
+import Article from "../views/article/Article";
 
 Vue.use(VueRouter);
 
@@ -45,6 +46,11 @@ const routes = [
         name:"about",
         component: About,
         meta:{index:5}
+    },
+    {
+        path: "/article/:id",
+        name:"article",
+        component: Article,
     }
 ];
 

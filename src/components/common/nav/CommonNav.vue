@@ -6,8 +6,41 @@
                 <div class="n-m-logo">Mr.Han</div>
                 <!--头部登录-->
                 <div class="n-m-login">
-                    <el-button type="primary" @click="ifLogin=true">登陆</el-button>
-                    <el-button type="success" @click="ifShowRegister=true">注册</el-button>
+                    <el-popover
+                            v-if="showUser"
+                            placement="top-start"
+                            width="100"
+                            trigger="hover">
+                        <p>欢迎登陆：{{login.user}}</p>
+                        <el-button type="danger" @click="handleLoginOut" plain size="mini">退出登录</el-button>
+                        <br>
+                        <el-button
+                                type="primary"
+                                @click="handleUploadPhoto=true"
+                                plain
+                                size="mini"
+                        >
+                            修改头像
+                        </el-button>
+                        <a href="" slot="reference" class="img"
+                           :style="{
+                                backgroundImage : 'url('+this.login.photo+')',
+                                position: 'absolute',
+                                top: '10px',
+                                left: '41px',
+                                width: '40px',
+                                height: '40px',
+                                backgroundPosition: 'center center',
+                                backgroundSize: 'cover',
+                                borderRadius: '50%',
+                                cursor:'pointer'
+                              }"
+                        />
+                    </el-popover>
+                    <div class="login" v-else>
+                        <el-button type="primary" @click="ifLogin=true">登陆</el-button>
+                        <el-button type="success" @click="ifShowRegister=true">注册</el-button>
+                    </div>
                 </div>
                 <!--头部导航-->
                 <div class="n-m-nav">
@@ -36,20 +69,33 @@
         </div>
         <register :dialogVisible="ifShowRegister" @handleClose="closeRegister"/>
         <login :dialogVisible="ifLogin" @handleClose="closeLogin"/>
+        <common-upload-photo :dialogVisible="handleUploadPhoto" @handleClose = "closeUpload"/>
     </div>
 </template>
 
 <script>
+    import {postIfLogin,loginOut}from"../../../api/index"
     import Register from "../../content/register/Register";
     import Login from "../../content/login/Login";
+    import CommonUploadPhoto from "../ uploadphoto/CommonUploadPhoto";
     export default {
         name: "CommonNav",
         data(){
             return{
                 //路由列表
                 routerList:["home","blog","message","diary","links","about"],
+                /*是否注册*/
                 ifShowRegister:false,
-                ifLogin:false
+                /*是否登陆*/
+                ifLogin:false,
+                /*显示登陆头像*/
+                showUser:false,
+                /*用户信息*/
+                login : {
+                    user : "",
+                    photo : ""
+                },
+                handleUploadPhoto:false
             }
 
         },
@@ -61,16 +107,53 @@
             }
         },
         methods:{
-            closeRegister(){
+            closeRegister(Bool){
                 this.ifShowRegister = false;
+                this.ifLogin = Bool;
             },
             closeLogin(){
                 this.ifLogin = false;
+            },
+            handleLoginOut(){
+                loginOut()
+                    .then(res=>{
+                        this.$message({
+                            message: "退出登录成功",
+                            type: 'success',
+                            duration : 2000
+                        });
+                        setTimeout(()=>{
+                            window.location.reload();
+                        },1700)
+                    })
+                    .catch(()=>{
+                        this.$message({
+                            message: "退出失败…",
+                            type: 'error',
+                            duration : 2000
+                        });
+                    })
+            },
+            closeUpload(){
+                this.handleUploadPhoto = false;
             }
         },
         components:{
             Register,
-            Login
+            Login,
+            CommonUploadPhoto
+        },
+        mounted() {
+            postIfLogin()
+                .then(res=>{
+                    if (res.data.userInfo){
+                        this.showUser = true;
+                        this.login.user = res.data.userInfo.user;
+                        this.login.photo = res.data.userInfo.photo;
+                    }else {
+                        this.showUser = false;
+                    }
+                })
         }
     }
 </script>
@@ -109,12 +192,18 @@
             }
 
             .n-m-login {
+                position: relative;
                 float: right;
+                width: 122px;
                 height: 60px;
                 line-height: 60px;
 
                 .el-button {
                     padding: 9px 13px;
+                }
+                >div.userInfo{
+                    width: 100%;
+                    height: 100%;
                 }
             }
 

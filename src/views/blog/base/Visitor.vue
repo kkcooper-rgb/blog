@@ -14,7 +14,10 @@
         name: "Visitor",
         props:{
             visitor:{
-                type:String
+                type:Array,
+                default:function () {
+                    return []
+                }
             }
         }
     }

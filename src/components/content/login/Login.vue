@@ -15,7 +15,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click=" ">确 定</el-button>
+                <el-button type="primary" @click="handleClick">确 定</el-button>
                 <el-button  @click=" ">取 消</el-button>
             </span>
         </el-dialog>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+    import {postLogin} from "../../../api/index"
     export default {
         name: "Login",
         data(){
@@ -76,6 +77,41 @@
             }
         },
         methods:{
+            async changePostLogin(){
+                if (!this.form.user)return;
+                const result = await postLogin(this.form);
+                console.log(result);
+                this.$refs["form"].validate((valid) => {
+                    if (valid) {
+                        //验证通过
+                        if(result.data.code){
+                            //登陆失败
+                            this.$message({
+                                message: result.data.msg,
+                                type: 'error',
+                                duration : 2000
+                            });
+                        }else {
+                            //登陆成功
+                            this.$message({
+                                message: result.data.msg,
+                                type: 'success',
+                                duration : 2000
+                            });
+                            setTimeout(()=>{
+                                this.$emit("handleClose");
+                                window.location.reload();
+                            },1000);
+                        }
+                    } else {
+                        //验证没通过
+                        return false;
+                    }
+                });
+            },
+            handleClick(){
+                this.changePostLogin()
+            },
             /*关闭的回调*/
             beforeClose(done){
                 this.$confirm('确认关闭？')
@@ -84,6 +120,9 @@
                     })
                     .catch(()=> {});
             }
+        },
+        mounted() {
+            this.changePostLogin()
         }
 
     }

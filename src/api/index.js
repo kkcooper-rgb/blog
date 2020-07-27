@@ -10,12 +10,16 @@ export function getArticleInfo() {
     return axios.get("/article/getInfo")
 }
 //获取热门文章
-export function getArticleHot(skip =0,limit=8) {
+export function getArticleHot(skip ,limit) {
     return axios.get("/article/getHot"+`?skip=${skip}&limit=${limit}`)
 }
 //获取推荐置顶
 export function getArticleComment(skip =0,limit=1) {
     return axios.get("/article/getHot"+`?skip=${skip}&limit=${limit}`)
+}
+//最近访问接口
+export function getVisitor(){
+    return axios.get("/visitor");
 }
 //获取文章列表
 export default {
@@ -46,4 +50,25 @@ export function getRegisterCheckVCode(svgCode) {
 //注册接口
 export function postRegister(options) {
     return axios.post('/register',{options});
+}
+//登陆接口
+export function postLogin(options){
+    return axios.post('/login',{options});
+}
+//判断是否登陆
+
+export function postIfLogin(){
+    return axios.post('/login/ifLogin');
+}
+//退出登陆
+export function loginOut(){
+    return axios.post('/login/logout');
+}
+//日记接口
+export function getDiary(){
+    return axios.get("/diary");
+}
+//友链接口
+export function getLinks(){
+    return axios.get("/links");
 }
